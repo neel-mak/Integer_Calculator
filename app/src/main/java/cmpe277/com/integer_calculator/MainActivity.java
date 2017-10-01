@@ -5,19 +5,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import static java.lang.Integer.parseInt;
+import static java.lang.Integer.toUnsignedLong;
 
 public class MainActivity extends AppCompatActivity {
 
 
     private TextView total;
     String result;
-    String display;
+    String display="0";
     int current_result = 0 ;
     int current_value = 0;
+    int count = 0;
+    String current_op = "";
+    int afterop = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,15 +48,21 @@ public class MainActivity extends AppCompatActivity {
     private void setup(){
 
         total = (TextView)findViewById(R.id.result);
+        total.setText(display);
     }
     void settext(int num){
-
+        if(afterop == 1){
+            afterop=0;
+            allclear();
+        }
         if(total.getText().length() >= 7){
             showToast("OVERFLOW!");
         }
         else{
-            if(display==null){
-                display=Integer.toString(num);
+            if(display == "0"){
+                //Toast.makeText(this,display+"len"+display.length(),Toast.LENGTH_LONG).show();
+                display =Integer.toString(num);
+
             }
             else{
                 display +=  Integer.toString(num);
@@ -62,29 +73,69 @@ public class MainActivity extends AppCompatActivity {
 
     }
     void clickoperator(View view){
+
         Button b = (Button)view;
         String op =( b.getText().toString());
 
-        if(op == "="){
 
-            current_result +=current_value;
-        }
-        if(op == "+"){
-            current_value = (parseInt(display));
+        if(op.equals("=")){
 
-        }
-        if(op == "-"){
+            operation(current_op);
+            current_op = "";
 
         }
-        if(op == "*"){
+        else{
+            
+            if(count==0){
+                current_result = (parseInt(display));
+                count++;
 
-        }
-        if(op == "/"){
+            }
+            else{
 
+                if (current_op.length() > 0){
+                    operation(current_op);
+                    current_op = op;
+                }
+
+            }
+            afterop =1;
+            current_op = op;
         }
+
+
+    }
+    public void operation(String op){
+        current_value = (parseInt(display));
+        switch(op){
+            case "+":
+                current_result +=current_value;
+                break;
+            case "-":
+                current_result -=current_value;
+                break;
+            case "*":
+                current_result *=current_value;
+                break;
+            case "/":
+                current_result /=current_value;
+                break;
+        }
+        allclear();
+        display = Integer.toString(current_result);
+        total.setText(display);
     }
     public void clear(View view){
-        display = null;
+        allclear();
+        current_result = 0;
+        current_value = 0;
+        count = 0;
+        current_op = "";
+        afterop = 0;
+    }
+    public void allclear(){
+        display = "0";
+
         total.setText(display);
     }
 }

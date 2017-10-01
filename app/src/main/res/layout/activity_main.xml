@@ -56,7 +56,8 @@
                     android:id="@+id/btnadd"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
-                    android:text="+" />
+                    android:text="+"
+                    android:onClick="clickoperator"/>
             </TableRow>
 
             <TableRow
@@ -88,7 +89,8 @@
                     android:id="@+id/btnsub"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
-                    android:text="-" />
+                    android:text="-"
+                    android:onClick="clickoperator"/>
             </TableRow>
 
             <TableRow
@@ -132,13 +134,15 @@
                     android:id="@+id/btnmul"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
-                    android:text="*" />
+                    android:text="*"
+                    android:onClick="clickoperator"/>
 
                 <Button
                     android:id="@+id/btndiv"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
-                    android:text="/" />
+                    android:text="/"
+                    android:onClick="clickoperator"/>
 
                 <Button
                     android:id="@+id/btnclear"
@@ -151,7 +155,8 @@
                     android:id="@+id/btnequal"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
-                    android:text="=" />
+                    android:text="="
+                    android:onClick="clickoperator"/>
             </TableRow>
         </TableLayout>
 
