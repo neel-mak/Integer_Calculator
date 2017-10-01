@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     int count = 0;
     String current_op = "";
     int afterop = 0;
+    int hascounter = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
     void settext(int num){
         if(afterop == 1){
             afterop=0;
+            hascounter=0;
             allclear();
         }
+
         if(total.getText().length() >= 7){
             showToast("OVERFLOW!");
         }
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 display +=  Integer.toString(num);
+                display = Integer.valueOf(display).toString();
             }
             total.setText(display);
         }
@@ -77,31 +81,36 @@ public class MainActivity extends AppCompatActivity {
         Button b = (Button)view;
         String op =( b.getText().toString());
 
+        if(hascounter == 0){
+            if(op.equals("=")){
 
-        if(op.equals("=")){
-
-            operation(current_op);
-            current_op = "";
-
-        }
-        else{
-            
-            if(count==0){
-                current_result = (parseInt(display));
-                count++;
+                operation(current_op);
+                current_op = "";
 
             }
             else{
+                hascounter=1;
+                if(count==0){
+                    current_result = (parseInt(display));
+                    count++;
 
-                if (current_op.length() > 0){
-                    operation(current_op);
-                    current_op = op;
                 }
+                else{
 
+                    if (current_op.length() > 0){
+                        operation(current_op);
+                        current_op = op;
+                    }
+
+                }
+                afterop =1;
+                current_op = op;
             }
-            afterop =1;
+        }
+        else{
             current_op = op;
         }
+
 
 
     }
@@ -118,7 +127,23 @@ public class MainActivity extends AppCompatActivity {
                 current_result *=current_value;
                 break;
             case "/":
-                current_result /=current_value;
+                if(current_value == 0){
+                    showToast("0 is not valid");
+                }
+                else{
+                    double num = (double)current_result/(double)current_value ;
+                    int inum= current_result/current_value;
+
+                    double diff = num - inum;
+
+                    if(diff < 0.5){
+                        current_result = inum;
+                    }else{
+                        current_result = inum+1;
+                    }
+
+                }
+
                 break;
         }
         allclear();
