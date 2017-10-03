@@ -1,5 +1,6 @@
 package cmpe277.com.integer_calculator;
 
+import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,7 +43,16 @@ public class MainActivity extends AppCompatActivity {
        // Toast.makeText(this,"num is"+num,Toast.LENGTH_LONG).show();
     }
 
-
+    public void showAlert(String msg){
+        AlertDialog.Builder myAlert = new AlertDialog.Builder(this);
+        myAlert.setMessage(msg).setNegativeButton("Back", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        }).create();
+        myAlert.show();
+    }
     public void showToast(String msg){
         Toast.makeText(this,msg,Toast.LENGTH_LONG).show();
     }
@@ -59,7 +69,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(total.getText().length() >= 7){
-            showToast("OVERFLOW!");
+            showAlert("OVERFLOW!");
+            display="0";
+            current_result=0;
+            allclear();
         }
         else{
             if(display == "0"){
@@ -84,8 +97,10 @@ public class MainActivity extends AppCompatActivity {
         if(hascounter == 0){
             if(op.equals("=")){
 
-                operation(current_op);
-                current_op = "";
+                    operation(current_op);
+                    current_op = "";
+
+
 
             }
             else{
@@ -108,7 +123,12 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         else{
-            current_op = op;
+            if(op.equals("=")){
+               showAlert("ERROR!");
+            }
+            else{
+                current_op = op;
+            }
         }
 
 
@@ -119,29 +139,56 @@ public class MainActivity extends AppCompatActivity {
         switch(op){
             case "+":
                 current_result +=current_value;
+                if(current_result>9999999 || current_result<-9999999)
+                {
+                    showAlert("OVERFLOW!");
+                    display="0";
+                    current_result=0;
+                }
                 break;
             case "-":
                 current_result -=current_value;
+                if(current_result<-9999999 || current_result>9999999)
+                {
+                    showAlert("OVERFLOW!");
+                    display="0";
+                    current_result=0;
+                }
                 break;
             case "*":
                 current_result *=current_value;
+                if(current_result<-9999999 || current_result>9999999)
+                {
+                    showAlert("OVERFLOW!");
+                    display="0";
+                    current_result=0;
+                }
                 break;
             case "/":
                 if(current_value == 0){
-                    showToast("0 is not valid");
+                    showAlert("ERROR!");
+                    display="0";
+                    current_result=0;
                 }
                 else{
                     double num = (double)current_result/(double)current_value ;
                     int inum= current_result/current_value;
 
                     double diff = num - inum;
-
-                    if(diff < 0.5){
-                        current_result = inum;
-                    }else{
-                        current_result = inum+1;
+                    if(diff < 0){
+                        if (diff <= -0.5) {
+                            current_result = inum-1;
+                        } else {
+                            current_result = inum;
+                        }
                     }
-
+                    else {
+                        if (diff < 0.5) {
+                            current_result = inum;
+                        } else {
+                            current_result = inum + 1;
+                        }
+                    }
                 }
 
                 break;
